@@ -35,6 +35,11 @@ func NewServer(cfg Config) *Server {
 	}
 }
 
+func (s *Server) handleRawMessage(rawMsg []byte) error {
+	fmt.Println(string(rawMsg))
+	return nil
+}
+
 func (s *Server) Start() error {
 	ln, err := net.Listen("tcp", s.ListenAddress)
 	if err != nil {
@@ -52,6 +57,9 @@ func (s *Server) loop() {
 	for {
 		select {
 		case rawMsg := <-s.msgch:
+			if err := s.handleRawMessage(rawMsg); err != nil {
+				slog.Error("raw message error", "err", err)
+			}
 			fmt.Println("raw message is", rawMsg)
 		case <-s.quitch:
 			return

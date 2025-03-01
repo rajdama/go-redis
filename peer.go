@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"net"
 )
@@ -25,10 +24,10 @@ func (p *Peer) readLoop() error {
 
 		n, err := p.conn.Read(buf)
 		if err != nil {
-			slog.Error("peer read error", "err")
+			slog.Error("peer read error", "err", err)
 			return err
 		}
-		fmt.Println(string(buf[:n]))
+
 		msgBuf := make([]byte, n)
 		copy(msgBuf, buf[:n])
 		p.msgch <- msgBuf
